@@ -1,0 +1,52 @@
+---
+title: "Untitled"
+author: "GMA"
+date: "11 de noviembre de 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+# Problem 1
+
+```{r}
+data_base =
+  tibble(
+  list = list.files("data", full.names = TRUE),
+  map(list, read_csv)
+  ) %>% 
+  unnest() %>% 
+  separate(list, into = c("col1", "subject"), sep = "_") %>%
+  mutate(col1 = str_remove(col1, "data/"), 
+         subject = str_remove(subject, ".csv")) %>% 
+  gather(key = week, value = obs, "week_1":"week_8") %>% 
+  mutate(week = str_remove(week, "week_")) %>%
+  select(col1, subject, week, obs)
+```
+
+Plot: experimental subjects have wider variation
+
+```{r}
+plot = data_base %>% 
+  ggplot(aes(x = week, y = obs)) + 
+  geom_line(aes(colour = col1, group = subject)) +
+    labs(
+    x = "Week" ,
+    y = "Observations"
+    ) +
+  theme(legend.position = "left")
+plot
+```
+
+# Problem 2
+
+```{r}
+
+```
+
